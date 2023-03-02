@@ -14,7 +14,7 @@ class Meals extends Model
     use Translatable;
     use SoftDeletes;
 
-    public $translatedAttributes = ['title'];
+    public $translatedAttributes = ['title','description'];
     
     protected $fillable = ['title', 'description','locale','status'];
 

@@ -8,23 +8,22 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
+use Carbon\Carbon;
+
 class Language
 {
     public function handle(Request $request, Closure $next)
     {
-        // Check if the first segment matches a language code
-        if (!array_key_exists($request->segment(1), config('translatable.locales')) ) {
-
-            // Store segments in array
-            $segments = $request->segments();
-
-            // Set the default language code as the first segment
-            $segments = \Arr::prepend($segments, config('app.fallback_locale'));
-
-            // Redirect to the correct url
-            return redirect()->to(implode('/', $segments));
+        if(session()->has('locale')){
+            Carbon::setLocale(session()->get('locale'));
+            app()->setLocale(session()->get('locale'));
         }
-
+        else{
+            Carbon::setLocale('en');
+            app()->setLocale('en');
+        }
         return $next($request);
     }
 }

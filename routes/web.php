@@ -20,8 +20,9 @@ use App\Tags;
 
 
 Route::get('/', function(Request $request){
+
     
-App::setlocale('hr');
+    
 
 /*
 $meals = Meals::when($request->title, function($query) use ($request) {
@@ -95,7 +96,22 @@ $meals= Meals::with($withParams)
 $meals->links();
 
 
-echo ("<pre>".json_encode($meals,JSON_PRETTY_PRINT)."</pre>");
 });
 
 
+Route::get('/filter', 'MealsFilterController@filter')->name('filter');
+
+//make route to set locale and call MealsFilterController@filter function
+Route::get('/{locale}', function($locale){
+    App::setLocale($locale);
+    return redirect()->route('filter');
+});
+/*
+Route::get('{locale}', function($locale) {
+    app()->setLocale($locale);
+  
+    $meals = Meals::all();
+  
+    return view('welcome',compact('meals'));
+ });
+*/

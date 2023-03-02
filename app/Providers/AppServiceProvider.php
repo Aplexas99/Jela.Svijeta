@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
 use Session;
+use Carbon\Carbon;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,8 +28,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Request $request)
     {
         if(!Session::has('locale')) {
-            session(['local' => 'en']);
+            Carbon::setLocale('en');
+            app()->setLocale('en');
+   
         }
-        app()->setLocale(session('locale'));
+        setlocale(LC_ALL, config('app.locale') . '.utf8');
+        Carbon::setLocale(config('app.locale'));
     }
 }
