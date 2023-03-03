@@ -1,8 +1,5 @@
 <h1>Backend Zadatak</h1>
 
-<pre>
-{{ $request}}
-</pre>
 <br>
 <br>
 
