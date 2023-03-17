@@ -8,6 +8,7 @@ use Astrotomic\Translatable\Translatable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class Meals extends Model
 {
     
@@ -55,49 +56,51 @@ class Meals extends Model
     }
   
     public function scopeFilterByCategory($query, $categoryId)
-{
-    if ($categoryId=='null') {
-        $query->categoryIsNull();
-    } elseif ($categoryId == '!null') {
-        $query->categoryIsNotNull();
-    } elseif(empty($categoryId)){
-        return $query;
-    } 
-    else {
-        $query->categoryById($categoryId);
-    } 
-    return $query;
-}
+    {
+        if ($categoryId == 'null') {
+            $query->categoryIsNull();
+        } 
+        elseif ($categoryId == '!null') {
+            $query->categoryIsNotNull();
+        } elseif(empty($categoryId)) {
+            return $query;
+        } else {
+            $query->categoryById($categoryId);
+        }
 
-public function scopeFilterByTagIds($query, $tagIds)
-{
-    if($tagIds == null){
         return $query;
     }
-    
-    foreach($tagIds as $tagId){
-        $query->whereHas('tags', function($q) use ($tagId) {
-            $q->where('tags.id', $tagId);
+
+    public function scopeFilterByTagIds($query, $tagIds)
+    {
+        if($tagIds == null){
+            return $query;
+        }
+        
+        foreach($tagIds as $tagId)
+        {
+            $query->whereHas('tags', function($q) use ($tagId) {
+                $q->where('tags.id', $tagId);
+            });
+        }
+        
+        $query->whereDoesntHave('tags', function($q) use ($tagIds) 
+        {
+            $q->whereNotIn('tags.id', $tagIds);
         });
-}
-    
-    $query->whereDoesntHave('tags', function($q) use ($tagIds) {
-        $q->whereNotIn('tags.id', $tagIds);
-    });
-    
-    return $query;
-
-}
-
-public function scopeReturnWithTrashed($query, $diff_time,$timeCarbon)
-{
-    if($diff_time<=0 || $diff_time=='null' || empty($diff_time)){
-        return $query->withoutTrashed();
-    } else {
-        $query->withTrashed()
-        ->whereDate('created_at','<',$timeCarbon);
+        
         return $query;
+
     }
 
-}
+    public function scopeReturnWithTrashed($query, $diff_time, $timeCarbon)
+    {
+        if($diff_time <= 0 || $diff_time == 'null' || empty($diff_time)) {
+            return $query->withoutTrashed();
+        } else {
+            $query->withTrashed()
+            ->whereDate('created_at','<', $timeCarbon);
+            return $query;
+        }
+    }
 }
