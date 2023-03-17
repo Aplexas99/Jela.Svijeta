@@ -25,4 +25,5 @@ class Categories extends Model
         return $this->hasMany(\App\Meals::class, 'category_id', 'id');
     }
 
+
 }
