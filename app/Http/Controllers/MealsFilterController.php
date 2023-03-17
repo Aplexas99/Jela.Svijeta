@@ -40,7 +40,7 @@ class MealsFilterController extends Controller
         $meals = new MealResourceCollection($meals);
     
         
-        $options = JSON_PRETTY_PRINTS;
+        $options = JSON_PRETTY_PRINT;
        
         return response()->json($meals, 200, [], $options);
     }
